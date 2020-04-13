@@ -2,13 +2,15 @@ const Reddit = require('snoowrap');
 const dayjs = require('dayjs');
 dayjs.extend(require('dayjs/plugin/utc'));
 
+const plugins = require('./plugins');
+
 /**
  * @param {Reddit} reddit
  */
 module.exports = async (reddit) => {
     console.log('Retrieving wiki content...');
     const wikiPage = await reddit.getSubreddit(process.env.SUBREDDIT).getWikiPage(process.env.WIKI_PAGE).content_md;
-    const threadContent = wikiPage;
+    const threadContent = await plugins(wikiPage);
 
     console.log('Retrieving current thread content...');
     const currentSubmission = await reddit.getSubmission(process.env.THREAD_ID).fetch();
